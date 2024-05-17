@@ -31,9 +31,6 @@ function handleImageError() {
 <template>
     <Head title="Welcome" />
     <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
-        <div class="fixed top-0 start-0 p-4 text-start z-10">
-            <ThemeToggle />
-        </div>
         <img id="background" class="absolute -left-20 top-0 max-w-[877px]" src="https://laravel.com/assets/img/welcome/background.svg" />
         <div class="relative min-h-screen flex flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white">
             <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
@@ -41,7 +38,10 @@ function handleImageError() {
                     <div class="flex lg:justify-center lg:col-start-2">
                         <ApplicationLogo class="block h-12 w-auto lg:h-16 lg:text-[#FF2D20]" />
                     </div>
-                    <nav v-if="canLogin" class="-mx-3 flex flex-1 justify-end">
+                    <nav v-if="canLogin" class="-mx-3 flex flex-1 justify-end items-center">
+                        <div class="me-3 relative">
+                            <ThemeToggle />
+                        </div>
                         <Link
                             v-if="$page.props.auth.user"
                             :href="route('dashboard')"
