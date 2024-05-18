@@ -52,6 +52,47 @@ const logout = () => {
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
+                                <NavLink :href="route('task.index')" :active="route().current('task.index')">
+                                    Task List
+                                </NavLink>
+                                <!-- Contacts Dropdown -->
+                                <div
+                                    class="hidden sm:flex sm:items-center sm:ms-4 border-b-2"
+                                    :class="route().current('person.index') || route().current('business.index') ? 'border-indigo-400 dark:border-indigo-600' : 'border-transparent'"
+                                >
+                                    <Dropdown align="left" width="40">
+                                        <template #trigger>
+                                            <span class="inline-flex rounded-md">
+                                                <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
+                                                    Contacts
+                                                    <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                                                    </svg>
+                                                </button>
+                                            </span>
+                                        </template>
+
+                                        <template #content>
+                                            <div class="w-40">
+                                                <!-- Contact Persons Link -->
+                                                <DropdownLink :href="route('person.index')">
+                                                    People
+                                                </DropdownLink>
+
+                                                <!-- Contact Businesses Link -->
+                                                <DropdownLink :href="route('business.index')">
+                                                    Businesses
+                                                </DropdownLink>
+                                            </div>
+                                        </template>
+                                    </Dropdown>
+                                </div>
+                                <NavLink :href="route('tag.index')" :active="route().current('tag.index')">
+                                    Tags
+                                </NavLink>
+                                <NavLink :href="route('category.index')" :active="route().current('category.index')">
+                                    Categories
+                                </NavLink>
                             </div>
                         </div>
 
@@ -198,6 +239,33 @@ const logout = () => {
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('task.index')" :active="route().current('task.index')">
+                            Task List
+                        </ResponsiveNavLink>
+                        <div class="pt-4 pb-1 border-y border-gray-200 dark:border-gray-600">
+                            <div class="flex items-center px-4">
+                                <div class="text-xs text-gray-400 dark:text-gray-100">
+                                    Contacts
+                                </div>
+                            </div>
+
+                            <div class="mt-3 space-y-1">
+                                <ResponsiveNavLink :href="route('person.index')" :active="route().current('person.index')">
+                                    People
+                                </ResponsiveNavLink>
+
+                                <!-- Contact Businesses Link -->
+                                <ResponsiveNavLink :href="route('business.index')" :active="route().current('business.index')">
+                                    Businesses
+                                </ResponsiveNavLink>
+                            </div>
+                        </div>
+                        <ResponsiveNavLink :href="route('tag.index')" :active="route().current('tag.index')">
+                            Tags
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('category.index')" :active="route().current('category.index')">
+                            Categories
                         </ResponsiveNavLink>
                     </div>
 
