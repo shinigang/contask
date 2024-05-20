@@ -2,11 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTagRequest;
+use App\Http\Requests\UpdateTagRequest;
 use App\Models\Tag;
-use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class TagController extends Controller
 {
+    use AuthorizesRequests;
+
+    public function __construct()
+    {
+        $this->authorizeResource(Tag::class, 'tag');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -20,23 +29,17 @@ class TagController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Tags/Create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreTagRequest $request)
     {
-        //
-    }
+        Tag::create($request);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Tag $tag)
-    {
-        //
+        return redirect()->route('tag.index')->banner('Tag was created!');
     }
 
     /**
@@ -44,15 +47,20 @@ class TagController extends Controller
      */
     public function edit(Tag $tag)
     {
-        //
+        return inertia('Tags/Edit', [
+            'tag' => $tag
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Tag $tag)
+    public function update(UpdateTagRequest $request, Tag $tag)
     {
-        //
+        $tag->fill($request->all());
+        $tag->save();
+
+        return redirect()->route('tag.index')->banner('Tag was updated!');
     }
 
     /**
@@ -60,6 +68,8 @@ class TagController extends Controller
      */
     public function destroy(Tag $tag)
     {
-        //
+        $tag->delete();
+
+        return redirect()->route('tag.index')->banner('Tag was removed!');
     }
 }

@@ -27,9 +27,9 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::resource('task', TaskController::class);
-    Route::resource('person', PersonController::class);
-    Route::resource('business', BusinessController::class);
-    Route::resource('tag', TagController::class);
-    Route::resource('category', CategoryController::class);
+    Route::resource('task', TaskController::class)->except(['show']);
+    Route::resource('person', PersonController::class)->except(['show']);
+    Route::resource('business', BusinessController::class)->except(['show']);
+    Route::resource('tag', TagController::class)->except(['show']);
+    Route::resource('category', CategoryController::class)->except(['show']);
 });
