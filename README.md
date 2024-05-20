@@ -34,7 +34,7 @@ ConTask is a simple contact and task management application written using VILT (
     sail artisan scout:sync-index-settings
     ```
 
-6. Run Factory and update meilisearch indexes (optional)
+6. Run Factory and update typesense indexes (optional)
 
     ```
     sail artisan tinker
