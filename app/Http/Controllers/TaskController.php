@@ -72,7 +72,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        return inertia('Task/Edit', [
+        return inertia('Tasks/Edit', [
             'task' => $task,
             'statuses' => $this->statuses,
             'businesses' => Business::all(),
