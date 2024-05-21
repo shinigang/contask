@@ -21,7 +21,7 @@ class PersonPolicy
      */
     public function view(User $user, Person $person): bool
     {
-        return false;
+        return true;
     }
 
     /**

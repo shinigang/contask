@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class Person extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -26,6 +28,8 @@ class Person extends Model
         'phone',
         'business_id'
     ];
+
+    protected $with = ['business', 'tags'];
 
     /**
      * Get the business that belong to the person.
@@ -55,5 +59,18 @@ class Person extends Model
     public function tasks(): MorphMany
     {
         return $this->morphMany(Task::class, 'taskable');
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        return array_merge($this->toArray(),[
+            'id' => (string) $this->id,
+            'created_at' => $this->created_at->timestamp,
+        ]);
     }
 }

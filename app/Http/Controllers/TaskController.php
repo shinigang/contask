@@ -9,6 +9,8 @@ use App\Models\Business;
 use App\Models\Person;
 use App\Models\Task;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class TaskController extends Controller
 {
@@ -31,7 +33,18 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return inertia('Tasks/Index');
+        $query = request()->input('query') ?? '';
+        $status = request()->input('status', 'all');
+        $tasks = Task::search($query)
+                    ->whereIn('status', $status != 'all' ? [$status] : Arr::pluck(TaskStatus::cases(), 'value'))
+                    ->paginate(10)
+                    ->appends(['status' => $status]);
+        return inertia('Tasks/Index', [
+            'query' => $query,
+            'statuses' => $this->statuses,
+            'tasks' => $tasks,
+            'status' => $status
+        ]);
     }
 
     /**
@@ -97,6 +110,17 @@ class TaskController extends Controller
         $task->save();
 
         return redirect()->route('task.index')->banner('Task was updated!');
+    }
+
+    /**
+     * Update the status of the specified resource in storage.
+     */
+    public function updateStatus(Request $request, Task $task)
+    {
+        $task->status = $request->status;
+        $task->save();
+
+        return redirect()->route('task.index')->banner('Task status was updated!');
     }
 
     /**

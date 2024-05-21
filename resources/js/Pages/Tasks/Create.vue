@@ -2,7 +2,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 
 defineProps({
-    statuses: Array,
+    statuses: Object,
     businesses: Array,
     people: Array,
     ownerTypes: Array

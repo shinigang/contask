@@ -21,7 +21,12 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return inertia('Categories/Index');
+        $query = request()->input('query') ?? '';
+        $categories = Category::where('name', 'LIKE', '%' . $query . '%')->paginate(10);
+        return inertia('Categories/Index', [
+            'query' => $query,
+            'categories' => $categories
+        ]);
     }
 
     /**

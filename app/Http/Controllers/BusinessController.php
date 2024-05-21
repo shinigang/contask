@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TaskStatus;
 use App\Http\Requests\StoreBusinessRequest;
 use App\Http\Requests\UpdateBusinessRequest;
 use App\Models\Business;
@@ -23,7 +24,12 @@ class BusinessController extends Controller
      */
     public function index()
     {
-        return inertia('Businesses/Index');
+        $query = request()->input('query') ?? '';
+        $businesses = Business::search($query)->paginate(10);
+        return inertia('Businesses/Index', [
+            'query' => $query,
+            'businesses' => $businesses
+        ]);
     }
 
     /**
@@ -51,6 +57,22 @@ class BusinessController extends Controller
         }
 
         return redirect()->route('business.index')->banner('Business was created!');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Business $business)
+    {
+        $taskStatuses = [];
+        foreach (TaskStatus::cases() as $case) {
+            $taskStatuses[$case->value] = $case->name;
+        }
+
+        return inertia('Businesses/Show', [
+            'business' => $business,
+            'taskStatuses' => $taskStatuses
+        ]);
     }
 
     /**

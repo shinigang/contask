@@ -21,7 +21,7 @@ class BusinessPolicy
      */
     public function view(User $user, Business $business): bool
     {
-        return false;
+        return true;
     }
 
     /**

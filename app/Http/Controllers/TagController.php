@@ -21,7 +21,12 @@ class TagController extends Controller
      */
     public function index()
     {
-        return inertia('Tags/Index');
+        $query = request()->input('query') ?? '';
+        $tags = Tag::where('name', 'LIKE', '%' . $query . '%')->paginate(10);
+        return inertia('Tags/Index', [
+            'query' => $query,
+            'tags' => $tags
+        ]);
     }
 
     /**

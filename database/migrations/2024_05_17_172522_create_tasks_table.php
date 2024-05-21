@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->text('description');
             $table->morphs('taskable');
             $table->string('status')->default('open');
 

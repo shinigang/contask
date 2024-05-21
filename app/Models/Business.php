@@ -9,11 +9,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class Business extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -24,6 +26,8 @@ class Business extends Model
         'name',
         'contact_email'
     ];
+
+    protected $with = ['categories', 'tags'];
 
     /**
      * Get the categories that belong to model.
@@ -63,5 +67,18 @@ class Business extends Model
     public function tasks(): MorphMany
     {
         return $this->morphMany(Task::class, 'taskable');
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray()
+    {
+        return array_merge($this->toArray(),[
+            'id' => (string) $this->id,
+            'created_at' => $this->created_at->timestamp,
+        ]);
     }
 }

@@ -28,8 +28,9 @@ Route::middleware([
     })->name('dashboard');
 
     Route::resource('task', TaskController::class)->except(['show']);
-    Route::resource('person', PersonController::class)->except(['show']);
-    Route::resource('business', BusinessController::class)->except(['show']);
+    Route::put('task/{task}/update-status', [TaskController::class, 'updateStatus'])->name('task.update-status');
+    Route::resource('person', PersonController::class);
+    Route::resource('business', BusinessController::class);
     Route::resource('tag', TagController::class)->except(['show']);
     Route::resource('category', CategoryController::class)->except(['show']);
 });

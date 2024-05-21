@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TaskStatus;
 use App\Http\Requests\StorePersonRequest;
 use App\Http\Requests\UpdatePersonRequest;
 use App\Models\Business;
@@ -23,7 +24,12 @@ class PersonController extends Controller
      */
     public function index()
     {
-        return inertia('People/Index');
+        $query = request()->input('query') ?? '';
+        $people = Person::search($query)->paginate(10);
+        return inertia('People/Index', [
+            'query' => $query,
+            'people' => $people
+        ]);
     }
 
     /**
@@ -48,6 +54,22 @@ class PersonController extends Controller
         }
 
         return redirect()->route('person.index')->banner('Person was created!');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Person $person)
+    {
+        $taskStatuses = [];
+        foreach (TaskStatus::cases() as $case) {
+            $taskStatuses[$case->value] = $case->name;
+        }
+
+        return inertia('People/Show', [
+            'person' => $person,
+            'taskStatuses' => $taskStatuses
+        ]);
     }
 
     /**

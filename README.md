@@ -31,7 +31,6 @@ ConTask is a simple contact and task management application written using VILT (
     ```
     alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
     sail artisan migrate
-    sail artisan scout:sync-index-settings
     ```
 
 6. Run Factory and update typesense indexes (optional)
@@ -48,14 +47,18 @@ ConTask is a simple contact and task management application written using VILT (
 ## Development
 
 1. Make sure Docker Desktop is running
-2. Open a terminal and run:
+2. Open a terminal and run docker via:
     ```
     ./vendor/bin/sail up
     ```
-3. Open another terminal and run the following:
+3. Open another terminal and run scout queue worker via:
+    ```
+    ./vendor/bin/sail artisan queue:work redis --queue=scout
+    ```
+4. Open another terminal and run the following:
     ```
     alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
     sail npm install
     sail npm run dev
     ```
-4. Open localhost in your browser.
+5. Open localhost in your browser.
