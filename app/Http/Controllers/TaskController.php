@@ -54,8 +54,8 @@ class TaskController extends Controller
     {
         return inertia('Tasks/Create', [
             'statuses' => $this->statuses,
-            'businesses' => Business::all(),
-            'people' => Person::all(),
+            'businesses' => Business::orderBy('name')->get(),
+            'people' => Person::orderBy('last_name')->get(),
             'ownerTypes' => ['person', 'business']
         ]);
     }
@@ -72,9 +72,14 @@ class TaskController extends Controller
         }
 
         if ($model) {
-            $model::find($request->owner_id)->tasks()->create($request);
+            $model::find($request->owner_id)->tasks()->create($request->all());
 
-            return redirect()->route('task.index')->banner('Task was created!');
+            if ($request->new) {
+                return redirect()->back()->banner('Task was created!');
+            }
+            else {
+                return redirect()->route('task.index')->banner('Task was created!');
+            }
         }
 
         return abort(400, 'Invalid task owner');
@@ -88,9 +93,9 @@ class TaskController extends Controller
         return inertia('Tasks/Edit', [
             'task' => $task,
             'statuses' => $this->statuses,
-            'businesses' => Business::all(),
-            'people' => Person::all(),
-            'owner_types' => ['person', 'business']
+            'businesses' => Business::orderBy('name')->get(),
+            'people' => Person::orderBy('last_name')->get(),
+            'ownerTypes' => ['person', 'business']
         ]);
     }
 

@@ -22,7 +22,7 @@ class TagController extends Controller
     public function index()
     {
         $query = request()->input('query') ?? '';
-        $tags = Tag::where('name', 'LIKE', '%' . $query . '%')->paginate(10);
+        $tags = Tag::where('name', 'LIKE', '%' . $query . '%')->orderBy('name')->paginate(10);
         return inertia('Tags/Index', [
             'query' => $query,
             'tags' => $tags
@@ -42,9 +42,15 @@ class TagController extends Controller
      */
     public function store(StoreTagRequest $request)
     {
-        Tag::create($request);
+        Tag::create(['name' => $request->name]);
 
-        return redirect()->route('tag.index')->banner('Tag was created!');
+        if ($request->new) {
+            return redirect()->back()->banner('Tag was created!');
+        }
+        else {
+            return redirect()->route('tag.index')->banner('Tag was created!');
+        }
+
     }
 
     /**

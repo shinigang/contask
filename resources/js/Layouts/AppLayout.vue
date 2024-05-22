@@ -58,7 +58,7 @@ const logout = () => {
                                 <!-- Contacts Dropdown -->
                                 <div
                                     class="hidden sm:flex sm:items-center sm:ms-4 border-b-2 pt-1"
-                                    :class="route().current('person.index') || route().current('business.index') ? 'border-indigo-400 dark:border-indigo-600' : 'border-transparent'"
+                                    :class="route().current('person.*') || route().current('business.*') ? 'border-indigo-400 dark:border-indigo-600' : 'border-transparent'"
                                 >
                                     <Dropdown align="left" width="40">
                                         <template #trigger>

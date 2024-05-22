@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue';
 import { router, Link, useForm } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import Pagination from '@/Components/Pagination.vue';
+import PaginationDetailed from '@/Components/PaginationDetailed.vue';
 import Company from '@/Components/Icons/Company.vue';
 import MagnifyingGlass from '@/Components/Icons/MagnifyingGlass.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
@@ -40,13 +40,13 @@ const addBusiness = () => {
     router.visit(route('business.create'));
 };
 
-const confirmDeleteBusiness = (businessId) => {
-    businessToBeDeleted.value = businessId;
+const confirmDeleteBusiness = (business) => {
+    businessToBeDeleted.value = business;
 };
 
 const deleteBusiness = () => {
-    deleteBusinessForm.delete(route('business.destroy', businessToBeDeleted.value), {
-        preserveScroll: true,
+    deleteBusinessForm.delete(route('business.destroy', businessToBeDeleted.value.id), {
+        preserveScroll: false,
         preserveState: true,
         onSuccess: () => {
             businessToBeDeleted.value = null;
@@ -65,7 +65,7 @@ const deleteBusiness = () => {
 
         <div class="py-10">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="mb-5 flex items-center">
+                <div class="flex items-center mb-5 px-2 sm:px-0">
                     <div class="grow">
                         <h3 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                             Business
@@ -108,7 +108,7 @@ const deleteBusiness = () => {
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">Name</th>
-                                    <th scope="col" class="px-6 py-3">Category</th>
+                                    <th scope="col" class="px-6 py-3">Categories</th>
                                     <th scope="col" class="px-6 py-3">Tags</th>
                                     <th scope="col" class="px-6 py-3 text-center">Action</th>
                                 </tr>
@@ -132,12 +132,17 @@ const deleteBusiness = () => {
                                         </Link>
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ business.category?.name }}
+                                        <span
+                                            v-for="(category, index) in business.categories" :key="`business_category_${index}`"
+                                            class="bg-blue-100 text-blue-800 text-xs font-medium me-1 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300"
+                                        >
+                                            {{ category.name }}
+                                        </span>
                                     </td>
                                     <td class="px-6 py-4">
                                         <span
                                             v-for="(tag, index) in business.tags" :key="`business_tag_${index}`"
-                                            class="inline-flex items-center px-3 py-1 me-2 text-sm font-medium rounded text-gray-800 bg-gray-100 dark:bg-gray-700 dark:text-gray-300"
+                                            class="bg-green-100 text-green-800 text-xs font-medium me-1 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300"
                                         >
                                             {{ tag.name }}
                                         </span>
@@ -146,7 +151,7 @@ const deleteBusiness = () => {
                                         <Link :href="route('business.show', business.id)">View</Link>
                                         <Link as="button" :href="route('business.edit', business.id)"
                                             class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
-                                        <button type="button" class="cursor-pointer ms-6 text-sm text-red-500" @click="confirmDeleteBusiness(business.id)">
+                                        <button type="button" class="cursor-pointer ms-6 text-sm text-red-500" @click="confirmDeleteBusiness(business)">
                                             Remove
                                         </button>
                                     </td>
@@ -160,7 +165,7 @@ const deleteBusiness = () => {
                         </table>
                     </div>
                 </div>
-                <Pagination :links="businesses.links" />
+                <PaginationDetailed :pager="businesses" />
             </div>
         </div>
 
@@ -171,7 +176,7 @@ const deleteBusiness = () => {
             </template>
 
             <template #content>
-                Are you sure you would like to delete this business?
+                Are you sure you would like to delete this business: <b>{{ businessToBeDeleted.name }}</b>?
             </template>
 
             <template #footer>

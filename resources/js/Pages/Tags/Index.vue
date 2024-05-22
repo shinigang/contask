@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue';
 import { router, Link, useForm } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import Pagination from '@/Components/Pagination.vue';
+import PaginationDetailed from '@/Components/PaginationDetailed.vue';
 import MagnifyingGlass from '@/Components/Icons/MagnifyingGlass.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import DangerButton from '@/Components/DangerButton.vue';
@@ -39,13 +39,13 @@ const addTag = () => {
     router.visit(route('tag.create'));
 };
 
-const confirmDeleteTag = (tagId) => {
-    tagToBeDeleted.value = tagId;
+const confirmDeleteTag = (tag) => {
+    tagToBeDeleted.value = tag;
 };
 
 const deleteTag = () => {
-    deleteTagForm.delete(route('tag.destroy', tagToBeDeleted.value), {
-        preserveScroll: true,
+    deleteTagForm.delete(route('tag.destroy', tagToBeDeleted.value.id), {
+        preserveScroll: false,
         preserveState: true,
         onSuccess: () => {
             tagToBeDeleted.value = null;
@@ -64,7 +64,7 @@ const deleteTag = () => {
 
         <div class="py-10">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="mb-5 flex items-center">
+                <div class="flex items-center mb-5 px-2 sm:px-0">
                     <div class="grow">
                         <h3 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                             Tags
@@ -121,7 +121,7 @@ const deleteTag = () => {
                                     <td class="flex items-center justify-center px-6 py-4 space-x-3">
                                         <Link as="button" :href="route('tag.edit', tag.id)"
                                             class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
-                                        <button type="button" class="cursor-pointer ms-6 text-sm text-red-500" @click="confirmDeleteTag(tag.id)">
+                                        <button type="button" class="cursor-pointer ms-6 text-sm text-red-500" @click="confirmDeleteTag(tag)">
                                             Remove
                                         </button>
                                     </td>
@@ -135,7 +135,7 @@ const deleteTag = () => {
                         </table>
                     </div>
                 </div>
-                <Pagination :links="tags.links" />
+                <PaginationDetailed :pager="tags" />
             </div>
         </div>
 
@@ -146,7 +146,7 @@ const deleteTag = () => {
             </template>
 
             <template #content>
-                Are you sure you would like to delete this tag?
+                Are you sure you would like to delete this tag: <b>{{ tagToBeDeleted.name }}</b>?
             </template>
 
             <template #footer>

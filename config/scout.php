@@ -195,6 +195,7 @@ return [
                         [
                             'name' => 'description',
                             'type' => 'string',
+                            'optional' => true
                         ],
                         [
                             'name' => 'status',
@@ -202,7 +203,7 @@ return [
                         ],
                         [
                             'name' => 'created_at',
-                            'type' => 'int64',
+                            'type' => 'int64'
                         ],
                     ],
                     'default_sorting_field' => 'created_at',
@@ -221,10 +222,12 @@ return [
                         [
                             'name' => 'name',
                             'type' => 'string',
+                            'sort'=> true
                         ],
                         [
                             'name' => 'contact_email',
                             'type' => 'string',
+                            'optional' => true
                         ],
                         [
                             'name' => 'created_at',
@@ -251,14 +254,17 @@ return [
                         [
                             'name' => 'last_name',
                             'type' => 'string',
+                            'sort'=> true
                         ],
                         [
                             'name' => 'email',
                             'type' => 'string',
+                            'optional' => true
                         ],
                         [
                             'name' => 'phone',
                             'type' => 'string',
+                            'optional' => true
                         ],
                         [
                             'name' => 'created_at',

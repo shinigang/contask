@@ -25,7 +25,7 @@ class PersonController extends Controller
     public function index()
     {
         $query = request()->input('query') ?? '';
-        $people = Person::search($query)->paginate(10);
+        $people = Person::search($query)->orderBy('last_name')->paginate(10);
         return inertia('People/Index', [
             'query' => $query,
             'people' => $people
@@ -48,12 +48,24 @@ class PersonController extends Controller
      */
     public function store(StorePersonRequest $request)
     {
-        $person = Person::create($request);
+        $person = Person::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'business_id' => $request->business_id
+        ]);
+
         if ($request->tags) {
             $person->tags()->sync($request->tags);
         }
 
-        return redirect()->route('person.index')->banner('Person was created!');
+        if ($request->new) {
+            return redirect()->back()->banner('Person was created!');
+        }
+        else {
+            return redirect()->route('person.index')->banner('Person was created!');
+        }
     }
 
     /**
@@ -66,8 +78,11 @@ class PersonController extends Controller
             $taskStatuses[$case->value] = $case->name;
         }
 
+        $tasks = $person->tasks()->orderBy('created_at', 'desc')->get();
+
         return inertia('People/Show', [
             'person' => $person,
+            'tasks' => $tasks,
             'taskStatuses' => $taskStatuses
         ]);
     }
@@ -91,6 +106,7 @@ class PersonController extends Controller
     {
         $person->fill($request->all());
         $person->save();
+
         if ($request->tags) {
             $person->tags()->sync($request->tags);
         }

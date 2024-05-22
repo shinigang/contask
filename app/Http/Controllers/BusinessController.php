@@ -25,7 +25,7 @@ class BusinessController extends Controller
     public function index()
     {
         $query = request()->input('query') ?? '';
-        $businesses = Business::search($query)->paginate(10);
+        $businesses = Business::search($query)->orderBy('name')->paginate(10);
         return inertia('Businesses/Index', [
             'query' => $query,
             'businesses' => $businesses
@@ -48,7 +48,11 @@ class BusinessController extends Controller
      */
     public function store(StoreBusinessRequest $request)
     {
-        $business = Business::create($request);
+        $business = Business::create([
+            'name' => $request->name,
+            'contact_email' => $request->contact_email,
+        ]);
+
         if ($request->categories) {
             $business->categories()->sync($request->categories);
         }
@@ -56,7 +60,12 @@ class BusinessController extends Controller
             $business->tags()->sync($request->tags);
         }
 
-        return redirect()->route('business.index')->banner('Business was created!');
+        if ($request->new) {
+            return redirect()->back()->banner('Business was created!');
+        }
+        else {
+            return redirect()->route('business.index')->banner('Business was created!');
+        }
     }
 
     /**
@@ -69,8 +78,13 @@ class BusinessController extends Controller
             $taskStatuses[$case->value] = $case->name;
         }
 
+        $employees = $business->people()->orderBy('last_name')->get();
+        $tasks = $business->tasks()->orderBy('created_at', 'desc')->get();
+
         return inertia('Businesses/Show', [
             'business' => $business,
+            'employees' => $employees,
+            'tasks' => $tasks,
             'taskStatuses' => $taskStatuses
         ]);
     }
@@ -94,6 +108,14 @@ class BusinessController extends Controller
     {
         $business->fill($request->all());
         $business->save();
+
+        if ($request->categories) {
+            $business->categories()->sync($request->categories);
+        }
+
+        if ($request->tags) {
+            $business->tags()->sync($request->tags);
+        }
 
         return redirect()->route('business.index')->banner('Business was updated!');
     }

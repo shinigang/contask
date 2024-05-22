@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,6 +31,25 @@ class Person extends Model
     ];
 
     protected $with = ['business', 'tags'];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'created_time_ago',
+    ];
+
+    /**
+     * Get the task's human readable created at.
+     */
+    protected function createdTimeAgo(): Attribute
+    {
+        return Attribute::get(function (): string {
+            return $this->created_at->diffForHumans();
+        });
+    }
 
     /**
      * Get the business that belong to the person.
@@ -70,6 +90,7 @@ class Person extends Model
     {
         return array_merge($this->toArray(),[
             'id' => (string) $this->id,
+            'last_name' => $this->last_name,
             'created_at' => $this->created_at->timestamp,
         ]);
     }

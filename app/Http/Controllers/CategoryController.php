@@ -22,7 +22,7 @@ class CategoryController extends Controller
     public function index()
     {
         $query = request()->input('query') ?? '';
-        $categories = Category::where('name', 'LIKE', '%' . $query . '%')->paginate(10);
+        $categories = Category::where('name', 'LIKE', '%' . $query . '%')->orderBy('name')->paginate(10);
         return inertia('Categories/Index', [
             'query' => $query,
             'categories' => $categories
@@ -42,9 +42,14 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        Category::create($request);
+        Category::create(['name' => $request->name]);
 
-        return redirect()->route('category.index')->banner('Category was created!');
+        if ($request->new) {
+            return redirect()->back()->banner('Category was created!');
+        }
+        else {
+            return redirect()->route('category.index')->banner('Category was created!');
+        }
     }
 
     /**

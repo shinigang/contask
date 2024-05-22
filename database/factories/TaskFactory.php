@@ -22,6 +22,7 @@ class TaskFactory extends Factory
         $taskable = $this->taskable();
         return [
             'name' => fake()->sentence(3),
+            'description' => fake()->text(),
             'taskable_id' => $taskable::factory()->create(),
             'taskable_type' => $taskable,
             'status' => fake()->randomElement(TaskStatus::class),

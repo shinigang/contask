@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue';
 import { router, Link, useForm } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import Pagination from '@/Components/Pagination.vue';
+import PaginationDetailed from '@/Components/PaginationDetailed.vue';
 import Company from '@/Components/Icons/Company.vue';
 import Person from '@/Components/Icons/Person.vue';
 import MagnifyingGlass from '@/Components/Icons/MagnifyingGlass.vue';
@@ -41,13 +41,13 @@ const addPerson = () => {
     router.visit(route('person.create'));
 };
 
-const confirmDeletePerson = (personId) => {
-    personToBeDeleted.value = personId;
+const confirmDeletePerson = (person) => {
+    personToBeDeleted.value = person;
 };
 
 const deletePerson = () => {
-    deletePersonForm.delete(route('person.destroy', personToBeDeleted.value), {
-        preserveScroll: true,
+    deletePersonForm.delete(route('person.destroy', personToBeDeleted.value.id), {
+        preserveScroll: false,
         preserveState: true,
         onSuccess: () => {
             personToBeDeleted.value = null;
@@ -66,7 +66,7 @@ const deletePerson = () => {
 
         <div class="py-10">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="mb-5 flex items-center">
+                <div class="flex items-center mb-5 px-2 sm:px-0">
                     <div class="grow">
                         <h3 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                             People
@@ -153,7 +153,7 @@ const deletePerson = () => {
                                     <td class="px-6 py-4">
                                         <span
                                             v-for="(tag, index) in person.tags" :key="`person_tag_${index}`"
-                                            class="inline-flex items-center px-3 py-1 me-2 text-sm font-medium rounded text-gray-800 bg-gray-100 dark:bg-gray-700 dark:text-gray-300"
+                                            class="bg-green-100 text-green-800 text-xs font-medium me-1 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300"
                                         >
                                             {{ tag.name }}
                                         </span>
@@ -162,7 +162,7 @@ const deletePerson = () => {
                                         <Link :href="route('person.show', person.id)">View</Link>
                                         <Link as="button" :href="route('person.edit', person.id)"
                                             class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
-                                        <button type="button" class="cursor-pointer ms-6 text-sm text-red-500" @click="confirmDeletePerson(person.id)">
+                                        <button type="button" class="cursor-pointer ms-6 text-sm text-red-500" @click="confirmDeletePerson(person)">
                                             Remove
                                         </button>
                                     </td>
@@ -176,7 +176,7 @@ const deletePerson = () => {
                         </table>
                     </div>
                 </div>
-                <Pagination :links="people.links" />
+                <PaginationDetailed :pager="people" />
             </div>
         </div>
 
@@ -187,7 +187,7 @@ const deletePerson = () => {
             </template>
 
             <template #content>
-                Are you sure you would like to delete this person?
+                Are you sure you would like to delete this person: <b>{{ personToBeDeleted.first_name }} {{ personToBeDeleted.last_name }}</b>?
             </template>
 
             <template #footer>

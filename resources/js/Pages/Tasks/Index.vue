@@ -5,7 +5,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import Pagination from '@/Components/Pagination.vue';
+import PaginationDetailed from '@/Components/PaginationDetailed.vue';
 import Company from '@/Components/Icons/Company.vue';
 import Person from '@/Components/Icons/Person.vue';
 import MagnifyingGlass from '@/Components/Icons/MagnifyingGlass.vue';
@@ -23,6 +23,8 @@ const props = defineProps({
     },
     query: String
 });
+
+console.log(props.tasks);
 
 const deleteTaskForm = useForm({});
 const taskToBeDeleted = ref(null);
@@ -60,13 +62,13 @@ const updateStatus = (task, newStatus) => {
     });
 };
 
-const confirmDeleteTask = (taskId) => {
-    taskToBeDeleted.value = taskId;
+const confirmDeleteTask = (task) => {
+    taskToBeDeleted.value = task;
 };
 
 const deleteTask = () => {
-    deleteTaskForm.delete(route('task.destroy', taskToBeDeleted.value), {
-        preserveScroll: true,
+    deleteTaskForm.delete(route('task.destroy', taskToBeDeleted.value.id), {
+        preserveScroll: false,
         preserveState: true,
         onSuccess: () => {
             taskToBeDeleted.value = null;
@@ -85,7 +87,7 @@ const deleteTask = () => {
 
         <div class="py-10">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="mb-5 flex items-center">
+                <div class="flex items-center mb-5 px-2 sm:px-0">
                     <div class="grow">
                         <h3 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                             Tasks
@@ -155,9 +157,16 @@ const deleteTask = () => {
                                 >
                                     <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ task.name }}
+                                        <div class="text-sm text-gray-600">
+                                            {{ task.created_time_ago }}
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div v-if="task.taskable.first_name" class="flex items-center gap-4">
+                                        <Link
+                                            v-if="task.taskable.first_name"
+                                            :href="route('person.show', task.taskable.id)"
+                                            class="flex items-center gap-4"
+                                        >
                                             <div class="flex items-center justify-center w-10 h-10 overflow-hidden border bg-gray-100 rounded-full dark:bg-gray-600">
                                                 <Person class="w-6 h-6" />
                                             </div>
@@ -167,8 +176,8 @@ const deleteTask = () => {
                                                     <a :href="`mailto:${task.taskable.email}`" target="_blank">{{ task.taskable.email }}</a>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div v-else class="flex items-center gap-4">
+                                        </Link>
+                                        <Link v-else :href="route('business.show', task.taskable.id)" class="flex items-center gap-4">
                                             <div class="flex items-center justify-center w-10 h-10 overflow-hidden border bg-gray-100 rounded-full dark:bg-gray-600">
                                                 <Company class="w-6 h-6" />
                                             </div>
@@ -178,7 +187,7 @@ const deleteTask = () => {
                                                     <a :href="`mailto:${task.taskable.contact_email}`" target="_blank">{{ task.taskable.contact_email }}</a>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </Link>
                                     </td>
                                     <td class="px-6 py-4 text-center">
                                         <Dropdown align="center" width="40">
@@ -214,7 +223,7 @@ const deleteTask = () => {
                                     <td class="flex items-center justify-center px-6 py-4 space-x-3">
                                         <Link as="button" :href="route('task.edit', task.id)"
                                             class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
-                                        <button type="button" class="cursor-pointer ms-6 text-sm text-red-500" @click="confirmDeleteTask(task.id)">
+                                        <button type="button" class="cursor-pointer ms-6 text-sm text-red-500" @click="confirmDeleteTask(task)">
                                             Remove
                                         </button>
                                     </td>
@@ -228,7 +237,7 @@ const deleteTask = () => {
                         </table>
                     </div>
                 </div>
-                <Pagination :links="tasks.links" />
+                <PaginationDetailed :pager="tasks" />
             </div>
         </div>
 
@@ -239,7 +248,7 @@ const deleteTask = () => {
             </template>
 
             <template #content>
-                Are you sure you would like to delete this task?
+                Are you sure you would like to delete this task: <b>{{ taskToBeDeleted.name }}</b>?
             </template>
 
             <template #footer>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -29,6 +30,25 @@ class Task extends Model
     ];
 
     protected $with = ['taskable'];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'created_time_ago',
+    ];
+
+    /**
+     * Get the task's human readable created at.
+     */
+    protected function createdTimeAgo(): Attribute
+    {
+        return Attribute::get(function (): string {
+            return $this->created_at->diffForHumans();
+        });
+    }
 
     /**
      * Get the attributes that should be cast.
