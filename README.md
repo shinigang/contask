@@ -26,14 +26,20 @@ ConTask is a simple contact and task management application written using VILT (
         composer install --ignore-platform-reqs
     ```
 
-5. Run migrations:
+5. Generate APP KEY
+
+   ```
+   alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
+   sail artisan key:generate
+   ```
+
+6. Run migrations:
 
     ```
-    alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
     sail artisan migrate
     ```
 
-6. Run Factory and update typesense indexes (optional)
+7. Run Factory and update typesense indexes (optional)
 
     ```
     sail artisan tinker
