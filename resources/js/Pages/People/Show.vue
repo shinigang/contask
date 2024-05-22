@@ -33,6 +33,14 @@ defineProps({
                                 </div>
                                 <div class="text-center">
                                     <h2 class="text-2xl font-black text-gray-900 dark:text-white">{{ person.last_name }}, {{ person.first_name }}</h2>
+                                    <div>
+                                        <span
+                                            v-for="(tag, index) in person.tags" :key="`person_tag_${index}`"
+                                            class="bg-red-100 text-red-800 text-xs font-medium me-1 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300"
+                                        >
+                                            {{ tag.name }}
+                                        </span>
+                                    </div>
                                     <span class="mt-3 text-xs text-gray-500 dark:text-gray:100">Added {{ person.created_time_ago }}</span>
                                 </div>
                             </div>

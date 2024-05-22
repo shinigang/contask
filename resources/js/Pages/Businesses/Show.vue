@@ -11,6 +11,7 @@ defineProps({
     taskStatuses: Object,
     tasks: Array
 });
+
 </script>
 
 <template>
@@ -34,6 +35,14 @@ defineProps({
                                 </div>
                                 <div class="text-center">
                                     <h2 class="text-2xl font-black text-gray-900 dark:text-white">{{ business.name }}</h2>
+                                    <div>
+                                        <span
+                                            v-for="(tag, index) in business.tags" :key="`business_tag_${index}`"
+                                            class="bg-red-100 text-red-800 text-xs font-medium me-1 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300"
+                                        >
+                                            {{ tag.name }}
+                                        </span>
+                                    </div>
                                     <span class="mt-3 text-xs text-gray-500 dark:text-gray:100">Added {{ business.created_time_ago }}</span>
                                 </div>
                             </div>
@@ -44,6 +53,18 @@ defineProps({
                                     <dd class="text-lg font-semibold">
                                         <a v-if="business.contact_email" href="mailto:{{ business.contact_email }}">{{ business.contact_email }}</a>
                                         <span v-else class="text-xs text-gray-500 dark:text-gray-200">None</span>
+                                    </dd>
+                                </div>
+                                <div class="flex flex-col py-3">
+                                    <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Categories</dt>
+                                    <dd class="text-lg font-semibold">
+                                        <span
+                                            v-for="(category, index) in business.categories" :key="`business_category_${index}`"
+                                            class="bg-green-100 text-green-800 text-xs font-medium me-1 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300"
+                                        >
+                                            {{ category.name }}
+                                        </span>
+                                        <span v-if="employees == 0" class="text-center text-xs text-gray-500 dark:text-gray-100">No Employees</span>
                                     </dd>
                                 </div>
                                 <div class="flex flex-col py-3">
