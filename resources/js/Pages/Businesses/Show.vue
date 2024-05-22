@@ -72,11 +72,11 @@ defineProps({
 
                         <div class="grid grid-cols-1 lg:grid-cols-2 lg:divide-x">
 
-                            <div class="lg:px-5">
+                            <div class="lg:pe-5">
                                 <TaskForm :owner="business" ownerType="business" :statuses="taskStatuses" />
                             </div>
 
-                            <div class="pt-3 lg:p-3">
+                            <div class="pt-3 lg:ps-5">
                                 <TaskList :tasks="tasks" />
                             </div>
 
